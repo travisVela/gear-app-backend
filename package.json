@@ -1,0 +1,22 @@
+{
+  "name": "gear-app-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/travisVela/gear-app-backend.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/travisVela/gear-app-backend/issues"
+  },
+  "homepage": "https://github.com/travisVela/gear-app-backend#readme",
+  "dependencies": {
+    "nodemon": "^2.0.3"
+  }
+}
