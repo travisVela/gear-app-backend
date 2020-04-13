@@ -1,18 +1,50 @@
 const express = require('express');
 const Post = require('../models/post');
 const router = express.Router();
+const multer = require('multer');
 
-router.post('', (req, res, next) => {
+// accepted mime types
+const MIME_TYPE_MAP = {
+    'image/png': 'png',
+    'image/jpeg': 'jpg',
+    'image/jpg': 'jpg'
+}
+
+// set up for uploading image
+const storage = multer.diskStorage({
+    destination: (req, file, callBack) => {
+        const isValid = MIME_TYPE_MAP[file.mimetype];
+        let error = new Error('Invalid mime type');
+        if (isValid) {
+            error = null
+        }
+        callBack(error, 'images');
+    },
+    filename: (req, file, callBack) => {
+        const name = file.originalname.toLowerCase().split(' ').join('-');
+        const ext = MIME_TYPE_MAP[file.mimetype];
+        callBack(null, name + '-' + Date.now() + '.' + ext);
+    }
+});
+
+router.post('', multer({storage: storage}).single('image'), (req, res, next) => {
+    const url = req.protocol + '://' + req.get('host');
     const post = new Post({
         title: req.body.title,
-        content: req.body.content
+        content: req.body.content,
+        imagePath: url + '/images/' + req.file.filename
     });
     console.log('🤖 post', post);
     post.save().then(result => {
         console.log(result);
         res.status(201).json({
             message: '🎉 post added successfully',
-            postId: result._id
+            post: {
+                id: result._id,
+                title: result.title,
+                content: result.content,
+                imagePath: result.imagePath
+            }
         });
     });
 
