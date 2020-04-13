@@ -34,7 +34,7 @@ router.post('/login', (req, res, next) => {
         .then(user => {
             if (!user) {
                 return res.status(401).json({
-                    message: 'Auth failed'
+                    message: '🐬 Auth failed'
                 });
             } 
             fetchedUser = user;
@@ -43,13 +43,13 @@ router.post('/login', (req, res, next) => {
         .then(result => {
             if (!result) {
                 return res.status(401).json({
-                    message: 'Auth failed',
+                    message: '🌓 Auth failed',
                     error: err
                 })
             }
             const token = jwt.sign(
                 { email: fetchedUser.email, userId: fetchedUser._id },
-                'this_is_my_scecret',
+                'this_is_my_secret',
                 { expiresIn: '1h' }
             );
             res.status(200).json({
@@ -58,7 +58,7 @@ router.post('/login', (req, res, next) => {
         })
         .catch(err => {
             return res.status(401).json({
-                message: 'Auth failed',
+                message:  '🍿 Auth failed',
                 error: err
             })
         })
