@@ -1,9 +1,10 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
+require('dotenv').config();
+
 
 const mongoose = require('mongoose');
-require('dotenv').config();
 
 const postsRoutes = require('./routes/posts');
 const userRoutes = require('./routes/user');
@@ -38,6 +39,14 @@ var allowCrossDomain = function(req, res, next) {
 }
 app.use(allowCrossDomain);
 
+app.get('/', (req, res, next) => {
+    res.send({
+        message: 'this is a message',
+
+    })
+});
+
+// app.use('/');
 app.use('/api/posts', postsRoutes);
 app.use('/api/user', userRoutes);
 
