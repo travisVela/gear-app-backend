@@ -21,6 +21,7 @@ router.post('/signup', (req, res, next) => {
             });
             user.save()
                 .then(result => {
+                   
                     res.status(201).json({
                         message: 'User created',
                         result: result
@@ -28,7 +29,8 @@ router.post('/signup', (req, res, next) => {
                 })
         })
         .catch(err => {
-            res.status(500).json({
+            return res.status(500).json({
+                message: 'error',
                 error: err
             });
         });
