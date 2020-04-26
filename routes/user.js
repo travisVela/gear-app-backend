@@ -19,20 +19,19 @@ router.post('/signup', (req, res, next) => {
                 email: req.body.email,
                 password: hash
             });
-            user.save()
+            user
+                .save()
                 .then(result => {
-                   
                     res.status(201).json({
                         message: 'User created',
                         result: result
-                    })
+                    });
                 })
-        })
-        .catch(err => {
-            return res.status(500).json({
-                message: 'error',
-                error: err
-            });
+                .catch(err => {
+                    return res.status(500).json({
+                        message: 'Error creating user',
+                    });
+                });
         });
 });
 
@@ -91,7 +90,7 @@ router.post('/login', (req, res, next) => {
         })
         .catch(err => {
             return res.status(401).json({
-                message:  '🍿 Auth failed',
+                message:  '🔐 Auth failed. Invalid credentials 🔐',
                 error: err
             })
         })
