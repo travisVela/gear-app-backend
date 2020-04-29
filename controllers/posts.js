@@ -1,23 +1,34 @@
 const Post = require('../models/post');
 
-exports.createPost = (req, res, next) => {
+const User = require('../models/user');
+
+exports.createPost = async (req, res, next) => {
     const url = req.protocol + '://' + req.get('host');
+
+    // get user who created post
+    let creator = await User.findById(req.userData.userId);
+
+    console.log('creator: ', creator)
+
+    // setup post object to save
     const post = new Post({
         title: req.body.title,
         content: req.body.content,
         imagePath: url + '/images/' + req.file.filename,
-        creator: req.userData.userId
+        creator: req.userData.userId,
+        creatorName: creator.username
     });
     console.log('🤖 post', post);
-    post.save().then(result => {
-        console.log(result);
+    await post.save().then(result => {
+        console.log('result of savong object: ', result);
         res.status(201).json({
             message: '🎉 post added successfully',
             post: {
                 id: result._id,
                 title: result.title,
                 content: result.content,
-                imagePath: result.imagePath
+                imagePath: result.imagePath,
+                creatorName: result.creatorName
             }
         });
     })

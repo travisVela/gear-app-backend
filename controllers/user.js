@@ -14,6 +14,7 @@ exports.createUser = (req, res, next) => {
         .then(hash => {
             const user = new User({
                 email: req.body.email,
+                username: req.body.username,
                 password: hash
             });
             user
@@ -55,7 +56,7 @@ exports.verifyUser = (req, res, next) => {
 
 exports.userLogin = (req, res, next) => {
     let fetchedUser;
-
+    console.log('id', req.params.id);
     // find user in DB
     User.findOne({ email: req.body.email })
         .then(user => {
@@ -82,7 +83,40 @@ exports.userLogin = (req, res, next) => {
             res.status(200).json({
                 token: token,
                 expiresIn: 3600,
-                userId: fetchedUser._id
+                userId: fetchedUser._id,
+                username: fetchedUser.username
+            })
+        })
+        .catch(err => {
+            return res.status(401).json({
+                message:  '🔐 Auth failed. Invalid credentials 🔐',
+                error: err
+            })
+        })
+}
+
+exports.getUserByID = (req, res, next) => {
+    let fetchedUser;
+    User.findOne({_id: req.body._id})
+        .then(user => {
+            if (!user) {
+                return res.status(401).json({
+                    message: '🐬 Auth failed'
+                });
+            } 
+            fetchedUser = user;
+            return bcrypt.compare(req.body.password, user.password);
+        })
+        .then(result => {
+            if (!result) {
+                return res.status(401).json({
+                    message: '🌓 Auth failed',
+                    error: err
+                })
+            }
+            res.status(200).json({
+                userId: fetchedUser._id,
+                username: fetchedUser.username
             })
         })
         .catch(err => {
